@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            color: white;
+            background: linear-gradient(135deg, #050816, #101c3c, #241447);
+            padding: 25px 15px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        header {
+            text-align: center;
+            margin: 25px 0 30px;
+        }
+
+        header h1 {
+            font-size: clamp(28px, 5vw, 42px);
+            color: #a9dfff;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: #b8c5e4;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #39496e;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.07);
+        }
+
+        .search-box input {
+            flex: 1;
+            min-width: 0;
+            padding: 14px;
+            border: none;
+            outline: none;
+            color: white;
+            background: transparent;
+            font-size: 16px;
+        }
+
+        .search-box input::placeholder {
+            color: #aab9dc;
+        }
+
+        .search-box button {
+            padding: 13px 20px;
+            border: none;
+            border-radius: 11px;
+            color: white;
+            background: #526dfe;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .search-box button:hover {
+            background: #7488ff;
+        }
+
+        .search-box button:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        #message {
+            text-align: center;
+            color: #ffb5c2;
+            margin: 15px 0;
+            min-height: 20px;
+        }
+
+        .weather-card {
+            padding: 30px 20px;
+            text-align: center;
+            border-radius: 25px;
+            border: 1px solid rgba(255,255,255,0.14);
+            background: linear-gradient(
+                145deg,
+                rgba(83,117,190,0.23),
+                rgba(67,38,112,0.30)
+            );
+            box-shadow: 0 20px 55px rgba(0,0,0,0.25);
+            backdrop-filter: blur(15px);
+        }
+
+        #cityName {
+            font-size: 27px;
+            margin-bottom: 10px;
+            overflow-wrap: anywhere;
+        }
+
+        #weatherIcon {
+            width: 120px;
+            height: 120px;
+            object-fit: contain;
+        }
+
+        #temperature {
+            font-size: clamp(50px, 12vw, 76px);
+            margin: 5px 0 12px;
+            color: #ffffff;
+        }
+
+        #weatherDescription {
+            font-size: 18px;
+            color: #c6d9ff;
+            text-transform: capitalize;
+            margin-bottom: 25px;
+        }
+
+        .details {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .detail-card {
+            padding: 20px 8px;
+            border-radius: 16px;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .detail-card p {
+            font-size: 13px;
+            color: #bdc9e8;
+            margin-bottom: 12px;
+        }
+
+        .detail-card h3 {
+            font-size: clamp(15px, 3vw, 21px);
+            overflow-wrap: anywhere;
+        }
+
+        footer {
+            text-align: center;
+            color: #8798c0;
+            margin-top: 30px;
+            font-size: 13px;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 15px 12px;
+            }
+
+            .search-box {
+                gap: 4px;
+            }
+
+            .search-box input {
+                padding: 10px 5px;
+                font-size: 14px;
+            }
+
+            .search-box button {
+                padding: 12px;
+            }
+
+            .weather-card {
+                padding: 25px 12px;
+            }
+
+            .details {
+                gap: 7px;
+            }
+
+            .detail-card {
+                padding: 16px 5px;
+            }
+
+            .detail-card p {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+
+        <header>
+            <h1>Weather Dashboard</h1>
+            <p>Explore the weather around the world</p>
+        </header>
+
+        <form id="searchForm" class="search-box">
+            <input
+                type="text"
+                id="cityInput"
+                placeholder="Enter city, e.g. Karachi"
+                aria-label="City name"
+                required
+            >
+            <button type="submit" id="searchBtn">Search</button>
+        </form>
+
+        <p id="message" role="status" aria-live="polite"></p>
+
+        <section class="weather-card">
+
+            <h2 id="cityName">Karachi</h2>
+
+            <img
+                id="weatherIcon"
+                src="https://openweathermap.org/img/wn/04d@2x.png"
+                alt="Weather icon"
+            >
+
+            <h1 id="temperature">--°C</h1>
+
+            <p id="weatherDescription">Loading weather...</p>
+
+            <div class="details">
+
+                <div class="detail-card">
+                    <p>Feels Like</p>
+                    <h3 id="feelsLike">--°C</h3>
+                </div>
+
+                <div class="detail-card">
+                    <p>Humidity</p>
+                    <h3 id="humidity">--%</h3>
+                </div>
+
+                <div class="detail-card">
+                    <p>Wind Speed</p>
+                    <h3 id="windSpeed">-- m/s</h3>
+                </div>
+
+            </div>
+        </section>
+
+        <footer>
+            <p>Weather data powered by OpenWeatherMap</p>
+            <p>Designed with care ☁️</p>
+        </footer>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
